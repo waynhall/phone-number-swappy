@@ -3,7 +3,7 @@
  * Plugin Name: Phone Number Swappy
  * Plugin URI: http://www.anchorwave.com
  * Description: Used to swap phone numbers
- * Version: 1.1.10
+ * Version: 1.1.11
  * Author: Jameel Bokhari
  * Author URI: http://www.codeatlarge.com
  * License: GPL2
@@ -13,7 +13,7 @@ GitHub Plugin URI: https://github.com/jbokhari/phone-number-swappy
 Copyright 2014  Jameel Bokhari  ( email : me@jameelbokhari.com )
 
 This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as 
+it under the terms of the GNU General Public License, version 2, as
 published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful,
@@ -34,9 +34,9 @@ add_action('admin_init', 'phone_number_swappy_updater');
 function phone_number_swappy_updater(){
 	if ( ! class_exists( 'WP_GitHub_Updater' ) )
 		require_once( PNS_PATH . '/update.php' );
-		
+
 	if ( is_admin() && class_exists('WP_GitHub_Updater') && WP_GitHub_Updater::VERSION == '1.6' ) {
-		if ( !defined('WP_GITHUB_FORCE_UPDATE') && isset( $_GET['force-check'] ) && $_GET['force-check'] == '1' && current_user_can('update_plugins') ){	
+		if ( !defined('WP_GITHUB_FORCE_UPDATE') && isset( $_GET['force-check'] ) && $_GET['force-check'] == '1' && current_user_can('update_plugins') ){
 			define('WP_GITHUB_FORCE_UPDATE', true);
 		}
 	    $config = array(
@@ -91,7 +91,7 @@ require_once('lava/class.lava.plugin.core.php');
  */
 class PhoneNumberSwappy extends PhoneNumberSwappyCore {
 	static $prefix = 'pns_';
-	static $ver = '1.1.10';
+	static $ver = '1.1.11';
 	static $name = 'pns';
 	public $option_prefix = 'pns_';
 	public $localize_object = 'PNS';
@@ -103,11 +103,11 @@ class PhoneNumberSwappy extends PhoneNumberSwappyCore {
 		$this->useFrontendJs = false;
 		$this->useAdminCss = true;
 		$this->useAdminJs = true;
-		$plugin = plugin_basename(__FILE__); 
+		$plugin = plugin_basename(__FILE__);
 		add_filter("plugin_action_links_$plugin", array($this, 'add_settings_page') );
 		$this->appendJS();
 	}
-	
+
 	public static function get_instance() {
 		if (null == self::$instance ) {
 			self::$instance = new PhoneNumberSwappy();
@@ -118,16 +118,16 @@ class PhoneNumberSwappy extends PhoneNumberSwappyCore {
 	 * Overrides default functionality
 	 * @return type
 	 */
-	function add_settings_page($links) { 
-	  $settings_link = '<a href="'.$this->static['options_page']['parent_slug'].'?page='.$this->static['options_page']['menu_slug'].'">Settings</a>'; 
-	  array_unshift($links, $settings_link); 
-	  return $links; 
+	function add_settings_page($links) {
+	  $settings_link = '<a href="'.$this->static['options_page']['parent_slug'].'?page='.$this->static['options_page']['menu_slug'].'">Settings</a>';
+	  array_unshift($links, $settings_link);
+	  return $links;
 	}
 	function swappy_header_stuff(){
 		// if (is_user_logged_in())
 		// 	return;
 		/*
-		 * $sereferral (bool) used to track whether this is a refrral or not 
+		 * $sereferral (bool) used to track whether this is a refrral or not
 		 */
 		$sereferral = null;
 		/**
@@ -135,11 +135,11 @@ class PhoneNumberSwappy extends PhoneNumberSwappyCore {
 		 */
 		// $phoneNumbers;
 		//if cookie is not set
-		$cookieName = self::$prefix . "referral";		
-		
+		$cookieName = self::$prefix . "referral";
+
 		$swappy_reset_link = $this->options['swappy_reset_link']->get_value();
-		
-		
+
+
 		if ( isset( $_GET['swappy_cookie_reset'] ) && $_GET['swappy_cookie_reset'] == '1' ){
 			setcookie( $cookieName, "", time()-3600);
 			return;
@@ -148,7 +148,7 @@ class PhoneNumberSwappy extends PhoneNumberSwappyCore {
 		if ( ! isset( $_COOKIE[$cookieName] ) ){
 
 			$sereferral = $this->determine_if_referral();
-		   
+
 		} else {
 		    //otherwise consult the almighty cookie
 		    if ( $_COOKIE[ $cookieName ] == "true" ){
@@ -167,7 +167,7 @@ class PhoneNumberSwappy extends PhoneNumberSwappyCore {
 	 * @since 1.1.3
 	 * @uses set_referral_cookie() to set cookie before returning.
 	 * @return (bool) true if referral, false if not
-	 * 
+	 *
 	 */
 	function determine_if_referral(){
 		$use_get_var = $this->options['use_get_var']->get_value();
@@ -177,7 +177,7 @@ class PhoneNumberSwappy extends PhoneNumberSwappyCore {
 	        // if so parse url...
 	        $ref = parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST );
 	        // and check if referral from google, yahoo, bing
-	        if( strpos( $ref, "google.com" ) !== false || strpos( $ref, "yahoo.com" ) !== false || strpos( $ref, "bing.com" ) !== false ) { 
+	        if( strpos( $ref, "google.com" ) !== false || strpos( $ref, "yahoo.com" ) !== false || strpos( $ref, "bing.com" ) !== false ) {
 	            // is a referral
 	            $this->set_referral_cookie(true);
 	        	return true;
@@ -275,7 +275,7 @@ class PhoneNumberSwappy extends PhoneNumberSwappyCore {
 	 */
 	function swappyNumber($atts, $content = null){
 
-		extract( shortcode_atts( 
+		extract( shortcode_atts(
 			array(
 				"number" => 1,
 				), $atts, 'swappy'
@@ -293,11 +293,11 @@ class PhoneNumberSwappy extends PhoneNumberSwappyCore {
 		$infooter = $this->options['infooter']->get_value() == "true" ? true : false;
 		wp_register_script( 'phone_number_swappy_javascript', $this->jsdir . 'frontend.js', array( 'jquery' ), self::$ver, $infooter );
 		//makes sure numbers are set
-		
+
 		// print_r($this);
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'enque_phone_number_swappy_javascript' ) );
-		
+
 	}
 	function enque_phone_number_swappy_javascript(){
 		$this->get_numbers();
@@ -321,7 +321,7 @@ class PhoneNumberSwappy extends PhoneNumberSwappyCore {
 		wp_enqueue_script( 'phone_number_swappy_javascript' );
 	}
 
-	/**  
+	/**
 	 * filter_client_phone_option()
 	 * Filter options like 'client_phone' automatically.
 	 * Uses field in options setting (part of phone_numbers repeater)
@@ -352,7 +352,7 @@ class PhoneNumberSwappy extends PhoneNumberSwappyCore {
 
 /**
  * Version is not saved in database for future upgrades.
- * This function sets the version number if it does not exist. 
+ * This function sets the version number if it does not exist.
  * If it does not, then it goes through the upgraded function to restore old properties.
  * This is triggered by register_activeation_hook
  * @since 1.1.3
@@ -366,7 +366,7 @@ function upgrade_phone_number_swappy_1_1_3() {
 			} else {
 				update_option( "pns_use_get_var", array( "search" ) );
 			}
-			
+
 
 			$pns_phoneNumber1 = get_option( "pns_phoneNumber1" );
 			$pns_swappyNumber1 = get_option( "pns_swappyNumber1" );
@@ -380,7 +380,7 @@ function upgrade_phone_number_swappy_1_1_3() {
 
 
 			$_meta_rows = 0;
-			
+
 			$newnumbers = array(
 				);
 			if ( $pns_phoneNumber1 || $pns_swappyNumber1 ){
